@@ -25,37 +25,56 @@ public class KeyboardUtil {
 
     public Activity mContext;
     private KeyboardView keyboardView;
-    private Keyboard digitalKeyboard;
+    //    private Keyboard digitalKeyboard;
     private Keyboard letterKeyboard;
-    private Keyboard symbolKeyboard;
+    //    private Keyboard symbolKeyboard;
     private EditText editText;
 
     private boolean isUpper = false;// 是否大写
-    private int curType = DIGITAL;
+    private int curType = LETTER;
 
     private boolean isRandomDigital = false;
     private boolean isRandomLetter = false;
     private boolean isRandomsymbol = false;
+    private boolean showzm = false;
 
 
-    public KeyboardUtil(Activity context){
-       this(context,false,false);
+    public KeyboardUtil(Activity context) {
+        this(context, false, false);
+    }
+
+    public void setShowZmOrSz(boolean sz) {
+        if (sz) {
+            letterKeyboard = new Keyboard(mContext, R.xml.i_letter_keyboard2);
+            randomDigitalKey(letterKeyboard);
+            switchLettersCase();
+
+            keyboardView.setKeyboard(letterKeyboard);
+            keyboardView.setPreviewEnabled(false);
+            keyboardView.setOnKeyboardActionListener(actionListener);
+        } else {
+            letterKeyboard = new Keyboard(mContext, R.xml.i_letter_keyboard);
+            randomDigitalKey(letterKeyboard);
+            switchLettersCase();
+
+            keyboardView.setKeyboard(letterKeyboard);
+            keyboardView.setPreviewEnabled(false);
+            keyboardView.setOnKeyboardActionListener(actionListener);
+        }
     }
 
 
-    public KeyboardUtil(Activity context,boolean isRandomDigital,boolean isRandomLetter){
+    public KeyboardUtil(Activity context, boolean isRandomDigital, boolean isRandomLetter) {
         this.mContext = context;
         keyboardView = (KeyboardView) context.findViewById(R.id.keyboardview);
-        digitalKeyboard = new Keyboard(context,R.xml.i_digital_keyboard);
-        letterKeyboard = new Keyboard(context,R.xml.i_letter_keyboard);
-        symbolKeyboard = new Keyboard(context,R.xml.i_symbol_keyborad);
-
+        letterKeyboard = new Keyboard(context, R.xml.i_letter_keyboard2);
         this.isRandomDigital = isRandomDigital;
         this.isRandomLetter = isRandomLetter;
 
-        randomDigitalKey(digitalKeyboard);
+        randomDigitalKey(letterKeyboard);
+        switchLettersCase();
 
-        keyboardView.setKeyboard(digitalKeyboard);
+        keyboardView.setKeyboard(letterKeyboard);
         keyboardView.setPreviewEnabled(false);
         keyboardView.setOnKeyboardActionListener(actionListener);
     }
@@ -73,51 +92,51 @@ public class KeyboardUtil {
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
-            if(curType == DIGITAL){
-                if(primaryCode == 97){//字母
+            if (curType == DIGITAL) {
+                if (primaryCode == 97) {//字母
                     curType = LETTER;
-                    if(isUpper) switchLettersCase();
+                    if (isUpper) switchLettersCase();
                     randomDigitalKey(letterKeyboard);
                     randomLetterKey(letterKeyboard);
                     keyboardView.setKeyboard(letterKeyboard);
-                }else if(primaryCode == Keyboard.KEYCODE_DELETE){//回退
+                } else if (primaryCode == Keyboard.KEYCODE_DELETE) {//回退
                     fallBack();
-                }else if(primaryCode == 35){//符号
+                } else if (primaryCode == 35) {//符号
                     curType = SYMBOL;
-                    keyboardView.setKeyboard(symbolKeyboard);
-                }else{
+//                    keyboardView.setKeyboard(symbolKeyboard);
+                } else {
                     intputContent(primaryCode);
                 }
 
-            }else if(curType == LETTER){
-                if(primaryCode == 46){//数字
+            } else if (curType == LETTER) {
+                if (primaryCode == 46) {//数字
                     curType = DIGITAL;
-                    randomDigitalKey(digitalKeyboard);
-                    keyboardView.setKeyboard(digitalKeyboard);
-                }else if(primaryCode == 35) {//符号
+//                    randomDigitalKey(digitalKeyboard);
+//                    keyboardView.setKeyboard(digitalKeyboard);
+                } else if (primaryCode == 35) {//符号
                     curType = SYMBOL;
-                    keyboardView.setKeyboard(symbolKeyboard);
-                }else if(primaryCode == Keyboard.KEYCODE_DELETE){//回退
+//                    keyboardView.setKeyboard(symbolKeyboard);
+                } else if (primaryCode == Keyboard.KEYCODE_DELETE) {//回退
                     fallBack();
-                }else if(primaryCode == Keyboard.KEYCODE_SHIFT){//切换大小写
+                } else if (primaryCode == Keyboard.KEYCODE_SHIFT) {//切换大小写
                     switchLettersCase();
-                }else{
+                } else {
                     intputContent(primaryCode);
                 }
-            }else{
-                if(primaryCode == 46){//数字
+            } else {
+                if (primaryCode == 46) {//数字
                     curType = DIGITAL;
-                    randomDigitalKey(digitalKeyboard);
-                    keyboardView.setKeyboard(digitalKeyboard);
-                }else if(primaryCode == 97){//字母
+//                    randomDigitalKey(digitalKeyboard);
+//                    keyboardView.setKeyboard(digitalKeyboard);
+                } else if (primaryCode == 97) {//字母
                     curType = LETTER;
-                    if(isUpper) switchLettersCase();
+                    if (isUpper) switchLettersCase();
                     randomDigitalKey(letterKeyboard);
                     randomLetterKey(letterKeyboard);
                     keyboardView.setKeyboard(letterKeyboard);
-                }else if(primaryCode == Keyboard.KEYCODE_DELETE) {//回退
+                } else if (primaryCode == Keyboard.KEYCODE_DELETE) {//回退
                     fallBack();
-                }else{
+                } else {
                     intputContent(primaryCode);
                 }
             }
@@ -153,9 +172,8 @@ public class KeyboardUtil {
     /**
      * 回退
      */
-    private void fallBack(){
-        if(editText != null)
-        {
+    private void fallBack() {
+        if (editText != null) {
             Editable editable = editText.getText();
             int start = editText.getSelectionStart();
             if (editable != null && editable.length() > 0) {
@@ -170,16 +188,15 @@ public class KeyboardUtil {
     /**
      * 输入内容
      */
-    private void intputContent(int primaryCode){
-        if(editText != null)
-        {
+    private void intputContent(int primaryCode) {
+        if (editText != null) {
             Editable editable = editText.getText();
             int start = editText.getSelectionStart();
             editable.insert(start, Character.toString((char) primaryCode));
         }
     }
 
-    public void setEditText(EditText editText){
+    public void setEditText(EditText editText) {
         this.editText = editText;
     }
 
@@ -189,28 +206,28 @@ public class KeyboardUtil {
     private void switchLettersCase() {
         List<Keyboard.Key> keylist = letterKeyboard.getKeys();
         if (isUpper) {//大写切换小写
-            isUpper = false;
-            for(Keyboard.Key key:keylist){
-                if (key.label!=null && isword(key.label.toString())) {
+//            isUpper = false;
+            for (Keyboard.Key key : keylist) {
+                if (key.label != null && isword(key.label.toString())) {
                     key.label = key.label.toString().toLowerCase();
-                    key.codes[0] = key.codes[0]+32;
+                    key.codes[0] = key.codes[0] + 32;
                 }
             }
         } else {//小写切换大写
-            isUpper = true;
-            for(Keyboard.Key key:keylist){
-                if (key.label!=null && isword(key.label.toString())) {
+//            isUpper = true;
+            for (Keyboard.Key key : keylist) {
+                if (key.label != null && isword(key.label.toString())) {
                     key.label = key.label.toString().toUpperCase();
-                    key.codes[0] = key.codes[0]-32;
+                    key.codes[0] = key.codes[0] - 32;
                 }
             }
         }
         keyboardView.setKeyboard(letterKeyboard);
     }
 
-    private boolean isword(String str){
+    private boolean isword(String str) {
         String wordstr = "abcdefghijklmnopqrstuvwxyz";
-        if (wordstr.indexOf(str.toLowerCase())>-1) {
+        if (wordstr.indexOf(str.toLowerCase()) > -1) {
             return true;
         }
         return false;
@@ -236,19 +253,19 @@ public class KeyboardUtil {
      */
     private void randomDigitalKey(Keyboard keyboard) {
 
-        if(!isRandomDigital) return;
+        if (!isRandomDigital) return;
 
         List<Keyboard.Key> keys = keyboard.getKeys();
         List<Keyboard.Key> newKeys = new ArrayList<>();
-        for(Keyboard.Key key : keys){
-            if(key.label != null && "0123456789".indexOf(key.label.toString()) != -1){
+        for (Keyboard.Key key : keys) {
+            if (key.label != null && "0123456789".indexOf(key.label.toString()) != -1) {
                 newKeys.add(key);
             }
         }
         List<CodeAndLabel> temp = new ArrayList<>();
         int count = newKeys.size();
-        for(int i=0 ; i<count;i++){
-            temp.add(new CodeAndLabel(48+i,String.valueOf(i)));
+        for (int i = 0; i < count; i++) {
+            temp.add(new CodeAndLabel(48 + i, String.valueOf(i)));
         }
 
         Random rand = new SecureRandom();
@@ -263,7 +280,7 @@ public class KeyboardUtil {
             temp.remove(num);
         }
 
-        for(int i=0;i<newKeys.size();i++){
+        for (int i = 0; i < newKeys.size(); i++) {
             Keyboard.Key key = newKeys.get(i);
             CodeAndLabel codeAndLabel = result.get(i);
             key.label = codeAndLabel.label;
@@ -274,19 +291,19 @@ public class KeyboardUtil {
     /**
      * 字母键盘随机
      */
-    private void randomLetterKey(Keyboard keyboard){
-        if(!isRandomLetter) return;
+    private void randomLetterKey(Keyboard keyboard) {
+        if (!isRandomLetter) return;
         List<Keyboard.Key> keys = keyboard.getKeys();
         List<Keyboard.Key> newKeys = new ArrayList<>();
-        for(Keyboard.Key key : keys){
-            if(key.label != null && "abcdefghijklmnopqrstuvwxyz".indexOf(key.label.toString()) != -1){
+        for (Keyboard.Key key : keys) {
+            if (key.label != null && "abcdefghijklmnopqrstuvwxyz".indexOf(key.label.toString()) != -1) {
                 newKeys.add(key);
             }
         }
         List<CodeAndLabel> temp = new ArrayList<>();
         int count = newKeys.size();
-        for(int i=0 ; i<count;i++){
-            temp.add(new CodeAndLabel(97+i,Character.toString((char) (97+i))));
+        for (int i = 0; i < count; i++) {
+            temp.add(new CodeAndLabel(97 + i, Character.toString((char) (97 + i))));
         }
 
         Random rand = new SecureRandom();
@@ -301,7 +318,7 @@ public class KeyboardUtil {
             temp.remove(num);
         }
 
-        for(int i=0;i<newKeys.size();i++){
+        for (int i = 0; i < newKeys.size(); i++) {
             Keyboard.Key key = newKeys.get(i);
             CodeAndLabel codeAndLabel = result.get(i);
             key.label = codeAndLabel.label;

@@ -20,13 +20,6 @@ import java.util.List;
 
 public class IKeyboardView extends KeyboardView {
 
-    /**
-     * 参考别人代码，keyboard xml 不设置 行列间距。用一个.9图片
-     *
-     * 在.9图片上面留出间距，这样只控制key的宽高比较方便
-     *
-     *
-     */
 
     private Context  mContext;
     private Keyboard mKeyBoard;

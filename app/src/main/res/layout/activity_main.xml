@@ -9,80 +9,72 @@
     <EditText
         android:id="@+id/edittext"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
+        android:layout_height="wrap_content" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        >
-        
+        android:layout_below="@id/edittext">
+
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="wrap_content"
-            android:background="#DDE4EE"
-            android:layout_height="50dp">
-            
+            android:layout_height="50dp"
+            android:background="#DDE4EE">
+
             <Button
+                android:id="@+id/bt_hide"
                 android:layout_width="50dp"
                 android:layout_height="35dp"
-                android:text="取消"
-                android:textColor="#555555"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/layer_button_cancel_bg"
-                />
+                android:text="隐藏字母"
+                android:textColor="#555555" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#0D409B"
                 android:layout_centerInParent="true"
-                android:textSize="16sp"
-                android:text="Custom Keyboard"
-                />
+                android:text="tangchao"
+                android:textColor="#0D409B"
+                android:textSize="16sp" />
 
 
             <Button
+                android:id="@+id/bt_show"
                 android:layout_width="50dp"
                 android:layout_height="35dp"
-                android:text="确定"
-                android:textColor="#555555"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="2dp"
-                android:layout_alignParentRight="true"
                 android:layout_marginRight="2dp"
                 android:background="@drawable/soft_key_blue"
-                />
-            
-            
+                android:text="显示字母"
+                android:textColor="#555555" />
+
+
         </RelativeLayout>
-        
+
 
         <cim.fuchen.customkeyboard.IKeyboardView
             android:id="@+id/keyboardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
-            android:background="#C8D2E1"
-            android:keyBackground="@drawable/key_background"
-            android:padding="2dp"
-            android:keyTextSize="18sp"
+            android:background="#EAEFF5"
             android:focusable="true"
-            android:shadowRadius="0"
-            android:shadowColor="@android:color/transparent"
             android:focusableInTouchMode="true"
+            android:keyBackground="@drawable/key_background"
             android:keyTextColor="#666666"
-            />
+            android:keyTextSize="30sp"
+            android:padding="2dp"
+            android:shadowColor="@android:color/transparent"
+            android:shadowRadius="0" />
 
 
     </RelativeLayout>
-
-
-
 
 
 </RelativeLayout>
